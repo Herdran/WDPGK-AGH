@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<!-- It's the HTML5 standard. -->
+
+<html>
+<head>
+    <title>Example 01 - triangle and square</title>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+    <style type="text/css">
+        body {
+            background-color: #77C4FE;
+
+            overflow: hidden;
+        }
+    </style>
+    <script src="three.js"></script>
+    <script src="Detector.js"></script>
+</head>
+<body>
+<div id="WebGLCanvas"></div>
+
+<script>
+    var scene;
+
+    var camera;
+
+    var triangleMeshTree1;
+    var triangleMeshTree12;
+    var triangleMeshTree2;
+    var triangleMeshTree22;
+    var triangleMeshTree3;
+    var triangleMeshTree32;
+
+    initializeScene();
+
+    animateScene();
+
+    function initializeScene() {
+        if (Detector.webgl) {
+            renderer = new THREE.WebGLRenderer({antialias: true});
+        } else {
+            renderer = new THREE.CanvasRenderer();
+        }
+
+        renderer.setClearColor(0x77C4FE, 1);
+
+        canvasWidth = window.innerWidth;
+        canvasHeight = window.innerHeight;
+
+        renderer.setSize(canvasWidth, canvasHeight);
+
+        document.getElementById("WebGLCanvas").appendChild(renderer.domElement);
+
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 1, 100);
+        camera.position.set(0, 0, 10);
+        // camera.position.set(0, 20, 10);
+        camera.lookAt(scene.position);
+        scene.add(camera);
+
+        var triangleTree1 = new THREE.Geometry();
+        triangleTree1.vertices.push(new THREE.Vector3(-1.0, 1.0, 0.0));
+        triangleTree1.vertices.push(new THREE.Vector3(0.0, 2.4, 0.0));
+        triangleTree1.vertices.push(new THREE.Vector3(1.0, 1.0, 0.0));
+        triangleTree1.faces.push(new THREE.Face3(0, 1, 2));
+
+        var triangleTree2 = new THREE.Geometry();
+        triangleTree2.vertices.push(new THREE.Vector3(-0.75, 2.2, 0.0));
+        triangleTree2.vertices.push(new THREE.Vector3(0.0, 3.35, 0.0));
+        triangleTree2.vertices.push(new THREE.Vector3(0.75, 2.2, 0.0));
+        triangleTree2.faces.push(new THREE.Face3(0, 1, 2));
+
+        var triangleTree3 = new THREE.Geometry();
+        triangleTree3.vertices.push(new THREE.Vector3(-0.5, 3.15, 0.0));
+        triangleTree3.vertices.push(new THREE.Vector3(0.0, 3.95, 0.0));
+        triangleTree3.vertices.push(new THREE.Vector3(0.5, 3.15, 0.0));
+        triangleTree3.faces.push(new THREE.Face3(0, 1, 2));
+
+        var triangleTree12 = new THREE.Geometry();
+        triangleTree12.vertices.push(new THREE.Vector3(0.0, 1.0, -1.0));
+        triangleTree12.vertices.push(new THREE.Vector3(0.0, 2.4, 0.0));
+        triangleTree12.vertices.push(new THREE.Vector3(0.0, 1.0, 1.0));
+        triangleTree12.faces.push(new THREE.Face3(0, 1, 2));
+
+        var triangleTree22 = new THREE.Geometry();
+        triangleTree22.vertices.push(new THREE.Vector3(0.0, 2.2, -0.75));
+        triangleTree22.vertices.push(new THREE.Vector3(0.0, 3.35, 0.0));
+        triangleTree22.vertices.push(new THREE.Vector3(0.0, 2.2, 0.75));
+        triangleTree22.faces.push(new THREE.Face3(0, 1, 2));
+
+        var triangleTree32 = new THREE.Geometry();
+        triangleTree32.vertices.push(new THREE.Vector3(0.0, 3.15, -0.5));
+        triangleTree32.vertices.push(new THREE.Vector3(0.0, 3.95, 0.0));
+        triangleTree32.vertices.push(new THREE.Vector3(0.0, 3.15, 0.5));
+        triangleTree32.faces.push(new THREE.Face3(0, 1, 2));
+
+        var squareWood = new THREE.Geometry();
+        squareWood.vertices.push(new THREE.Vector3(-0.1, 1.0, 0.0));
+        squareWood.vertices.push(new THREE.Vector3(0.1, 1.0, 0.0));
+        squareWood.vertices.push(new THREE.Vector3(0.1, 0.0, 0.0));
+        squareWood.vertices.push(new THREE.Vector3(-0.1, 0.0, 0.0));
+        squareWood.faces.push(new THREE.Face3(0, 1, 2));
+        squareWood.faces.push(new THREE.Face3(0, 2, 3));
+
+        var squareHouse = new THREE.Geometry();
+        squareHouse.vertices.push(new THREE.Vector3(-1.2, 1.2, 0.0));
+        squareHouse.vertices.push(new THREE.Vector3(1.2, 1.2, 0.0));
+        squareHouse.vertices.push(new THREE.Vector3(1.2, -1.2, 0.0));
+        squareHouse.vertices.push(new THREE.Vector3(-1.2, -1.2, 0.0));
+        squareHouse.faces.push(new THREE.Face3(0, 1, 2));
+        squareHouse.faces.push(new THREE.Face3(0, 2, 3));
+
+        var squareWindow = new THREE.Geometry();
+        squareWindow.vertices.push(new THREE.Vector3(-0.3, 0.4, 0.0));
+        squareWindow.vertices.push(new THREE.Vector3(0.3, 0.4, 0.0));
+        squareWindow.vertices.push(new THREE.Vector3(0.3, -0.4, 0.0));
+        squareWindow.vertices.push(new THREE.Vector3(-0.3, -0.4, 0.0));
+        squareWindow.faces.push(new THREE.Face3(0, 1, 2));
+        squareWindow.faces.push(new THREE.Face3(0, 2, 3));
+
+        var squareGrass = new THREE.Geometry();
+        squareGrass.vertices.push(new THREE.Vector3(-8.0, 0.5, 0.0));
+        squareGrass.vertices.push(new THREE.Vector3(15.0, 0.5, 0.0));
+        squareGrass.vertices.push(new THREE.Vector3(15.0, -2.0, 0.0));
+        squareGrass.vertices.push(new THREE.Vector3(-8.0, -2.0, 0.0));
+        squareGrass.faces.push(new THREE.Face3(0, 1, 2));
+        squareGrass.faces.push(new THREE.Face3(0, 2, 3));
+
+        var triangleHouse = new THREE.Geometry();
+        triangleHouse.vertices.push(new THREE.Vector3(1.2, 1.2, 0.0));
+        triangleHouse.vertices.push(new THREE.Vector3(-1.2, 1.2, 0.0));
+        triangleHouse.vertices.push(new THREE.Vector3(0.0, 2.0, 0.0));
+        triangleHouse.faces.push(new THREE.Face3(0, 1, 2));
+
+
+        var circle = new THREE.CircleGeometry(0.2, 32);
+
+
+        var triangleMaterial1 = new THREE.MeshBasicMaterial({
+            color: 0x005500,
+            side: THREE.DoubleSide
+        });
+
+        var triangleMaterial2 = new THREE.MeshBasicMaterial({
+            color: 0x004500,
+            side: THREE.DoubleSide
+        });
+
+        var grassMaterial = new THREE.MeshBasicMaterial({
+            color: 0x348C31,
+            side: THREE.DoubleSide
+        });
+
+        var squareHouseMaterial = new THREE.MeshBasicMaterial({
+            color: 0x335680,
+            side: THREE.DoubleSide
+        });
+
+        var roofMaterial = new THREE.MeshBasicMaterial({
+            color: 0x8F0B0B,
+            side: THREE.DoubleSide
+        });
+
+        var glassMaterial = new THREE.MeshBasicMaterial({
+            color: 0x97C1E6,
+            side: THREE.DoubleSide
+        });
+
+        var woodMaterial = new THREE.MeshBasicMaterial({
+            color: 0x3B1C0A,
+            side: THREE.DoubleSide
+        });
+
+        var doorknobMaterial = new THREE.MeshBasicMaterial({
+            color: 0x3F3F41,
+            side: THREE.DoubleSide
+        });
+
+        triangleMeshTree1 = new THREE.Mesh(triangleTree1, triangleMaterial1);
+        triangleMeshTree1.position.set(2.6, -2.5, 4.0);
+        scene.add(triangleMeshTree1);
+
+        triangleMeshTree12 = new THREE.Mesh(triangleTree12, triangleMaterial2);
+        triangleMeshTree12.position.set(2.6, -2.5, 4.0);
+        scene.add(triangleMeshTree12);
+
+        triangleMeshTree2 = new THREE.Mesh(triangleTree2, triangleMaterial1);
+        triangleMeshTree2.position.set(2.6, -2.5, 4.0);
+        scene.add(triangleMeshTree2);
+
+        triangleMeshTree22 = new THREE.Mesh(triangleTree22, triangleMaterial2);
+        triangleMeshTree22.position.set(2.6, -2.5, 4.0);
+        scene.add(triangleMeshTree22);
+
+        triangleMeshTree3 = new THREE.Mesh(triangleTree3, triangleMaterial1);
+        triangleMeshTree3.position.set(2.6, -2.5, 4.0);
+        scene.add(triangleMeshTree3);
+
+        triangleMeshTree32 = new THREE.Mesh(triangleTree32, triangleMaterial2);
+        triangleMeshTree32.position.set(2.6, -2.5, 4.0);
+        scene.add(triangleMeshTree32);
+
+        var trunkMesh = new THREE.Mesh(squareWood, woodMaterial);
+        trunkMesh.position.set(2.6, -2.5, 4.0);
+        scene.add(trunkMesh);
+
+        var doorknob = new THREE.Mesh(circle, doorknobMaterial);
+        doorknob.position.set(-1.7, -1.3, 4.0);
+        doorknob.scale.set(0.3, 0.3, 0.3);
+        scene.add(doorknob);
+
+        var squareHouseMesh = new THREE.Mesh(squareHouse, squareHouseMaterial);
+        squareHouseMesh.position.set(-2.0, -0.7, 4.0);
+        scene.add(squareHouseMesh);
+
+        var roofMesh = new THREE.Mesh(triangleHouse, roofMaterial);
+        roofMesh.position.set(-2.0, -0.7, 4.0);
+        scene.add(roofMesh);
+
+        var windowHouse = new THREE.Mesh(squareWindow, glassMaterial);
+        windowHouse.position.set(-2.6, -0.1, 4.0);
+        scene.add(windowHouse);
+
+        var windowHouse2 = windowHouse.clone();
+        windowHouse2.position.set(-1.4, -0.1, 4.0);
+        scene.add(windowHouse2);
+
+        var door = new THREE.Mesh(squareWindow, woodMaterial);
+        door.position.set(-2.0, -1.3, 4.0);
+        door.scale.set(1.2, 1.5, 1);
+        scene.add(door);
+
+        var grass = new THREE.Mesh(squareGrass, grassMaterial);
+        grass.position.set(-8.0, -2.0, 2.0);
+        scene.add(grass);
+    }
+
+
+    function animateScene() {
+        triangleMeshTree1.rotation.y += 0.15;
+        triangleMeshTree12.rotation.y += 0.15;
+        triangleMeshTree2.rotation.y += 0.15;
+        triangleMeshTree22.rotation.y += 0.15;
+        triangleMeshTree3.rotation.y += 0.15;
+        triangleMeshTree32.rotation.y += 0.15;
+        requestAnimationFrame(animateScene);
+        renderScene();
+    }
+
+    function renderScene() {
+        renderer.render(scene, camera);
+    }
+</script>
+</body>
+</html>
