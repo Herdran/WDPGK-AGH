@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Lab 02.01 - Ambient and SpotLight</title>
+    <script type="text/javascript" src="three.js"></script>
+    <script type="text/javascript" src="jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="stats.js"></script>
+    <script type="text/javascript" src="dat.gui.js"></script>
+	<script type="text/javascript" src="OrbitControls.js"></script>
+    <style>
+        body {
+            /* set margin to 0 and overflow to hidden, to go fullscreen */
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<div id="Stats-output">
+</div>
+<!-- Div which will hold the Output -->
+<div id="WebGL-output">
+</div>
+
+<!-- Javascript code that runs our Three.js examples -->
+<script type="text/javascript">
+
+
+        var stats = initStats();
+
+        var scene = new THREE.Scene();
+
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+
+        var renderer = new THREE.WebGLRenderer();
+
+        renderer.setClearColor(new THREE.Color(0x000000));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+		renderer.autoClear = true;
+		renderer.autoClearColor = true;
+
+		ctr = new THREE.OrbitControls( camera, renderer.domElement);
+
+        var sunGeometry = new THREE.SphereGeometry(25, 20, 20);
+        var sunMaterial = new THREE.MeshPhongMaterial({color: 0xe6cc00, specular:true, shininess:100});
+        var sun = new THREE.Mesh(sunGeometry, sunMaterial);
+
+        sun.position.x = 0;
+        sun.position.y = 0;
+        sun.position.z = 0;
+
+        scene.add(sun);
+
+
+        var mercuryGeometry = new THREE.SphereGeometry(2.4, 20, 20);
+        var mercuryMaterial = new THREE.MeshPhongMaterial({color: 0xB7B8B9, specular:true, shininess:100});
+        var mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
+
+        mercury.position.x = 35;
+        mercury.position.y = 0;
+        mercury.position.z = 0;
+        mercury.castShadow = true;
+        mercury.receiveShadow = true;
+
+        scene.add(mercury);
+
+
+        var venusGeometry = new THREE.SphereGeometry(6, 20, 20);
+        var venusMaterial = new THREE.MeshPhongMaterial({color: 0xFFC649, specular:true, shininess:100});
+        var venus = new THREE.Mesh(venusGeometry, venusMaterial);
+
+        venus.position.x = 67;
+        venus.position.y = 0;
+        venus.position.z = 0;
+        venus.castShadow = true;
+        venus.receiveShadow = true;
+
+        scene.add(venus);
+
+
+        var earthGeometry = new THREE.SphereGeometry(6.3, 20, 20);
+        var earthMaterial = new THREE.MeshPhongMaterial({color: 0x287AB8, specular: true, shininess: 100});
+        var earth = new THREE.Mesh(earthGeometry, earthMaterial);
+        earth.castShadow = true;
+
+        earth.position.x = 93;
+        earth.position.y = 0;
+        earth.position.z = 0;
+        earth.castShadow = true;
+        earth.receiveShadow = true;
+
+        scene.add(earth);
+
+
+        var moonGeometry = new THREE.SphereGeometry(1.7, 20, 20);
+        var moonMaterial = new THREE.MeshPhongMaterial({color: 0xB7B8B9, specular:true, shininess:100});
+        var moon = new THREE.Mesh(moonGeometry, moonMaterial);
+
+        moon.position.x = 103;
+        moon.position.y = 0;
+        moon.position.z = 0;
+        moon.castShadow = true;
+        moon.receiveShadow = true;
+
+        scene.add(moon);
+
+
+        var marsGeometry = new THREE.SphereGeometry(3.3, 20, 20);
+        var marsMaterial = new THREE.MeshPhongMaterial({color: 0x9C2E35, specular:true, shininess:100});
+        var mars = new THREE.Mesh(marsGeometry, marsMaterial);
+
+        mars.position.x = 142;
+        mars.position.y = 0;
+        mars.position.z = 0;
+        mars.castShadow = true;
+        mars.receiveShadow = true;
+
+        scene.add(mars);
+
+
+        var phobosGeometry = new THREE.SphereGeometry(0.22, 20, 20);
+        var phobosMaterial = new THREE.MeshPhongMaterial({color: 0xB6977D, specular:true, shininess:100});
+        var phobos = new THREE.Mesh(phobosGeometry, phobosMaterial);
+
+        phobos.position.x = 147;
+        phobos.position.y = 0;
+        phobos.position.z = 0;
+        phobos.castShadow = true;
+        phobos.receiveShadow = true;
+
+        scene.add(phobos);
+
+
+        var deimosGeometry = new THREE.SphereGeometry(0.12, 20, 20);
+        var deimosMaterial = new THREE.MeshPhongMaterial({color: 0xB6977D, specular:true, shininess:100});
+        var deimos = new THREE.Mesh(deimosGeometry, deimosMaterial);
+
+        deimos.position.x = 150;
+        deimos.position.y = 0;
+        deimos.position.z = 0;
+        deimos.castShadow = true;
+        deimos.receiveShadow = true;
+
+        scene.add(deimos);
+
+
+        camera.position.x = 0;
+        camera.position.y = 500;
+        camera.position.z = 500;
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+        var ambiColor = "#bbbbbb";
+        var ambientLight = new THREE.AmbientLight(ambiColor);
+        scene.add(ambientLight);
+
+
+        var mercurySpotLight = new THREE.SpotLight(0xffffff);
+        mercurySpotLight.position.set(0, 0, 0);
+        mercurySpotLight.castShadow = true;
+
+		mercurySpotLight.target = mercury;
+
+        scene.add(mercurySpotLight);
+
+
+        var venusSpotLight = new THREE.SpotLight(0xffffff);
+        venusSpotLight.position.set(0, 0, 0);
+        venusSpotLight.castShadow = true;
+
+		venusSpotLight.target = venus;
+
+        scene.add(venusSpotLight);
+
+
+        var earthSpotLight = new THREE.SpotLight(0xffffff);
+        earthSpotLight.position.set(0, 0, 0);
+        earthSpotLight.castShadow = true;
+
+		earthSpotLight.target = earth;
+
+        scene.add(earthSpotLight);
+
+
+        var marsSpottLight = new THREE.SpotLight(0xffffff);
+        marsSpottLight.position.set(0, 0, 0);
+        marsSpottLight.castShadow = true;
+
+		marsSpottLight.target = mars;
+
+        scene.add(marsSpottLight);
+
+        $("#WebGL-output").append(renderer.domElement);
+
+        var mercuryStep = 0;
+        var venusStep = 0;
+        var earthStep = 0;
+        var moonStep = 0;
+        var marsStep = 0;
+        var phobosStep = 0;
+        var deimosStep = 0;
+
+
+        var controls = new function () {
+            this.ambientColor = ambiColor;
+        }
+
+        var gui = new dat.GUI();
+        gui.addColor(controls, 'ambientColor').onChange(function (e) {
+            ambientLight.color = new THREE.Color(e);
+        });
+
+
+        render();
+
+        function render() {
+            stats.update();
+
+            mercuryStep += 0.08;
+            venusStep += 0.03;
+            earthStep += 0.02;
+            moonStep += 0.15;
+            marsStep += 0.01;
+            phobosStep += 0.45;
+            deimosStep += 0.13;
+
+            mercury.position.x = 35 * Math.cos(mercuryStep);
+            mercury.position.z = 35 * Math.sin(mercuryStep);
+
+            venus.position.x = 67 * Math.cos(venusStep);
+            venus.position.z = 67 * Math.sin(venusStep);
+
+            earth.position.x = 93 * Math.cos(earthStep);
+            earth.position.z = 93 * Math.sin(earthStep);
+
+            moon.position.x = 10 * Math.cos(moonStep) + earth.position.x;
+            moon.position.z = 10 * Math.sin(moonStep) + earth.position.z;
+
+            mars.position.x = 142 * Math.cos(marsStep);
+            mars.position.z = 142 * Math.sin(marsStep);
+
+            phobos.position.x = 5 * Math.cos(phobosStep) + mars.position.x;
+            phobos.position.z = 5 * Math.sin(phobosStep) + mars.position.z;
+
+            deimos.position.x = 8 * Math.cos(deimosStep) + mars.position.x;
+            deimos.position.z = 8 * Math.sin(deimosStep) + mars.position.z;
+
+
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+        }
+
+        function initStats() {
+
+            var stats = new Stats();
+
+            stats.setMode(0); // 0: fps, 1: ms
+
+            stats.domElement.style.position = 'absolute';
+            stats.domElement.style.left = '0px';
+            stats.domElement.style.top = '0px';
+
+            $("#Stats-output").append(stats.domElement);
+
+            return stats;
+        }
+
+
+
+</script>
+</body>
+</html>
